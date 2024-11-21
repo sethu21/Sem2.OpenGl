@@ -19,7 +19,7 @@ namespace Sem2.OpenGl
         private float prevMouseX = 0.0f;
         private float sensitivityX = 0.1f;
         private float cameraAngley = 0.0f;
-        //private List<MyCube> cubeList = new List<MyCube>();
+        private List<MyCube> cubeList = new List<MyCube>();
         private OpenGL gl;
         public Form1()
 
@@ -35,7 +35,7 @@ namespace Sem2.OpenGl
         }
         private void drawFloor()
         {
-            float floorSize = 5.0f;
+            float floorSize = 10.0f;
 
             gl.Begin(OpenGL.GL_QUADS);
             gl.Color(0.5f, 0.5f, 0.5f); 
@@ -77,11 +77,16 @@ namespace Sem2.OpenGl
 
             
             gl.LoadIdentity();
+            gl.Rotate(cameraAngley, 0.0f, 1.0f, 0.0f);
             gl.Translate(posX, 0.0f, posZ); 
-            gl.Rotate(cameraAngley, 0.0f, 1.0f, 0.0f); 
+           
 
             
             drawFloor();
+            foreach (var cube in cubeList)
+            {
+                cube.Draw(gl);
+            }
 
             gl.Flush();
         }
@@ -92,6 +97,13 @@ namespace Sem2.OpenGl
 
             gl.ClearColor(0, 0, 0, 1);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
+            Random rand = new Random();
+            for (int i = 0; i < 6; i++) // Add 2 cubes
+            {
+                double x = rand.Next(-5, 6); 
+                double z = rand.Next(-5, 6); 
+                cubeList.Add(new MyCube(x, z));
+            }
         }
 
         private void openGLControl1_MouseMove(object sender, MouseEventArgs e)
